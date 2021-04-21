@@ -1,0 +1,24 @@
+version: '3'
+
+networks:
+  locustnw:
+    external: true
+
+services:
+  master:
+    image: locustio/locust
+    networks:
+      - locustnw
+    ports:
+     - "8089:8089"
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/locustfile.py -H http://web:8080 --master
+  
+  worker:
+    image: locustio/locust
+    networks:
+      - locustnw
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --worker --master-host master
