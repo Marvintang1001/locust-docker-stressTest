@@ -13,7 +13,7 @@ services:
      - "8089:8089"
     volumes:
       - ./:/mnt/locust
-    command: -f /mnt/locust/locustfile.py -H http://web:8080 --master
+    command: -f /mnt/locust/locustfile.py -H http://web:8080 --master --headless -u 100 -r 50 -t 20s
   
   worker:
     image: locustio/locust

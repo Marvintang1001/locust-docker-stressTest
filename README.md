@@ -24,3 +24,9 @@
 ## 总结：
 
 &emsp;到此，docker locust的多进程测试大致已经摸透，server是express代码，stressTest是locust脚本和docker配置。类似这个过程的曲折已经好久没经历了，但解决问题还是这个职业最大的乐趣。后续会更新线上测试的方案和实操~~~
+
+## (2021.4.22)
+
+&emsp;好像终于找到为什么wsl上docker配置host一直不成功：
+&emsp;Docker For Mac 的实现和标准 Docker 规范有区别，Docker For Mac 的 Docker Daemon 是运行于虚拟机 (xhyve) 中的，而不是像 Linux 上那样作为进程运行于宿主机，因此 Docker For Mac 没有 docker0 网桥，不能实现 host 网络模式，host 模式会使 Container 复用 Daemon 的网络栈 (在 xhyve 虚拟机中)，而不是与 Host 主机网络栈，这样虽然其它容器仍然可通过 xhyve 网络栈进行交互，但却不是用的 Host 上的端口 (在 Host 上无法访问)。bridge 网络模式 -p 参数不受此影响，它能正常打开 Host 上的端口并映射到 Container 的对应 Port。文档在这一点上并没有充分说明，容易踩坑。
+&emsp;想想wsl也是win10的unix虚拟机，这就解释通了。。。
